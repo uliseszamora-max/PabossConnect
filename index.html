@@ -103,10 +103,12 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const supabase = supabase.createClient(
+      const supabase = window.supabase.createClient(
         'https://pn0jdukyo4rjosjtehwr.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuYmp1ZGt5dWpvaXFzamhlaHhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNzc1NTYsImV4cCI6MjA3Nzk1MzU1Nn0.uUyNaDpzEtSJPJ_utOdOQLMS9bNEg0MtGjQip0vHXx4' // ← pega aquí tu clave completa
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // ← pega aquí tu clave completa
       );
+
+      console.log("Supabase conectado:", supabase);
 
       let currentUser = "";
 
@@ -121,6 +123,7 @@
       loginBtn.addEventListener('click', () => {
         currentUser = usernameInput.value.trim();
         if (currentUser !== "") {
+          console.log("Usuario:", currentUser);
           loginSection.style.display = 'none';
           forumSection.style.display = 'block';
           cargarPosts();
