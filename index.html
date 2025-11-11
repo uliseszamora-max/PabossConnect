@@ -1,227 +1,357 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>PabosConnect</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PABOSCONNECT — Foro académico (Prototipo)</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e9f5e9, #f5f0e6);
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #2e7d32;
-      color: #fdf6e3;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    .container {
-      max-width: 700px;
-      margin: 40px auto;
-      background: #fffbea;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: 1px solid #a1887f;
-      border-radius: 8px;
-      font-size: 1em;
-      background-color: #f9f9f9;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #388e3c;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #1b5e20;
-    }
-    .logout-btn {
-      background: #8d6e63;
-      float: right;
-    }
-    .logout-btn:hover {
-      background: #5d4037;
-    }
-    .post {
-      border-top: 1px solid #d7ccc8;
-      padding: 20px 0;
-    }
-    .post img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
-    .post strong {
-      color: #2e7d32;
-      font-size: 1.1em;
-    }
-    .post small {
-      display: block;
-      margin-top: 5px;
-      color: #6d4c41;
-      font-size: 0.9em;
-    }
+    :root{--bg:#f7fbf7;--card:#ffffff;--accent:#2f8f5a;--muted:#6b7280;--glass: rgba(255,255,255,0.7)}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg,#eef7ef 0%, #ffffff 100%);color:#0b1220}
+    .app{max-width:1100px;margin:28px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:72px;height:72px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;border:2px solid rgba(47,143,90,0.12)}
+    .logo img{width:56px;height:56px;object-fit:contain}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--accent);color:white;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+    .search{display:flex;align-items:center;gap:8px;background:white;padding:6px 8px;border-radius:999px;border:1px solid #e6efe6}
+    input.search-in{border:0;outline:0;padding:6px;min-width:220px}
+
+    main{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
+
+    /* left column */
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(15,23,42,0.04);border:1px solid rgba(15,23,42,0.03)}
+    .profile{display:flex;gap:12px;align-items:center}
+    .avatar{width:64px;height:64px;border-radius:10px;background:linear-gradient(180deg,#cfe8d7,#fff);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)}
+    .meta small{color:var(--muted)}
+    .categories{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .cat{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;cursor:pointer}
+    .cat:hover{background:#f3faf3}
+
+    /* right column */
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .threads{display:flex;flex-direction:column;gap:10px}
+    .thread{display:flex;gap:12px;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);align-items:flex-start;background:linear-gradient(180deg,#fff,#fbfffb)}
+    .votes{width:56px;display:flex;flex-direction:column;align-items:center;padding:6px;border-radius:8px;background:#f6fff6;border:1px solid rgba(47,143,90,0.08)}
+    .votes button{background:transparent;border:0;cursor:pointer;font-weight:700;color:var(--accent)}
+    .thread-content{flex:1}
+    .thread-title{font-weight:700;margin:0}
+    .thread-meta{color:var(--muted);font-size:13px}
+    .tags{display:flex;gap:6px;margin-top:8px}
+    .tag{background:#ecf8ee;padding:4px 8px;border-radius:999px;font-size:12px;color:var(--accent)}
+
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* modal */
+    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;padding:18px}
+    .modal{width:100%;max-width:720px;background:var(--card);border-radius:12px;padding:16px}
+    .form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+    textarea{min-height:100px;padding:8px;border-radius:8px;border:1px solid #e6efe6}
+    input[type=text],input[type=email],select{padding:8px;border-radius:8px;border:1px solid #e6efe6}
+
+    /* small screens */
+    @media(max-width:850px){main{grid-template-columns:1fr} .logo{display:none}.search-in{min-width:100px}}
   </style>
 </head>
 <body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABQ0lEQVR4nO3YwQnCMBRF0a78xQbS2hG8iJxEJ3o7sR1o0XQGgY5y2sE1r1j/2vY3nZ3s7u7t7gGxIYbVq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq9Vq/At8BD1g6Yz2tmgAAAABJRU5ErkJggg==" alt="logo"/></div>
+        <div>
+          <h1>PABOSCONNECT</h1>
+          <p class="lead">Foro académico — Interacción Humano-Computadora (UACJ)</p>
+        </div>
+      </div>
 
-  <header>
-    <h1>PabosConnect</h1>
-    <p>Tu espacio en tonos verdes y cafés para compartir ideas e imágenes</p>
-  </header>
+      <div class="top-actions">
+        <div class="search card" style="display:flex;align-items:center">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#6b7280" d="M9.5 3a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM20.7 20.3 16 15.6"/></svg>
+          <input id="searchBox" class="search-in" placeholder="Buscar temas, materias, autores...">
+        </div>
+        <button class="btn" id="newThreadBtn">+ Nuevo tema</button>
+        <button class="btn ghost" id="loginBtn">Iniciar sesión</button>
+      </div>
+    </header>
 
-  <!-- Sección de login -->
-  <div class="container" id="login-section">
-    <h2>Iniciar sesión</h2>
-    <input type="text" id="username" placeholder="Nombre de usuario">
-    <button id="login-btn">Entrar</button>
-  </div>
+    <main>
+      <aside>
+        <div class="card">
+          <div class="profile">
+            <div class="avatar" id="avatarLetter">C</div>
+            <div class="meta">
+              <div id="userName">Invitado</div>
+              <small id="userSub">Sin sesión</small>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn" id="myProfileBtn">Mi perfil</button>
+            <button class="btn ghost" id="logoutBtn" style="display:none">Cerrar</button>
+          </div>
 
-  <!-- Sección del foro -->
-  <div class="container" id="forum-section" style="display:none;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h2>Foro de PabosConnect</h2>
-      <button class="logout-btn" id="logout-btn">Cerrar sesión</button>
+          <div class="categories" style="margin-top:12px">
+            <div><strong>Categorías</strong></div>
+            <div class="cat" data-cat="General">General <small style="color:var(--muted)"> – charla y anuncios</small></div>
+            <div class="cat" data-cat="Materias">Materias <small style="color:var(--muted)"> – dudas por asignatura</small></div>
+            <div class="cat" data-cat="Recursos">Recursos <small style="color:var(--muted)"> – apuntes y guías</small></div>
+            <div class="cat" data-cat="Tutorias">Tutorías <small style="color:var(--muted)"> – ofrece/solicita ayuda</small></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <strong>Top colaboradores</strong>
+          <ul id="topList" style="padding-left:16px;margin-top:8px;color:var(--muted)"></ul>
+        </div>
+      </aside>
+
+      <section>
+        <div class="toolbar">
+          <div>
+            <strong id="currentFilter">Todos los temas</strong>
+            <div style="color:var(--muted);font-size:13px">Filtra por categoría o busca palabras clave</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="sortSelect">
+              <option value="new">Más recientes</option>
+              <option value="top">Más votados</option>
+              <option value="answered">Más respondidos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="threads" id="threadsList"></div>
+
+        <footer>
+          Prototipo — PABOSCONNECT · Foro académico para la UACJ · (Frontend sin back-end, datos guardados en tu navegador)
+        </footer>
+      </section>
+    </main>
+
+    <!-- modal nuevo tema -->
+    <div class="modal-back" id="modalNew">
+      <div class="modal">
+        <h3>Crear nuevo tema</h3>
+        <div class="form-row">
+          <label>Título</label>
+          <input id="threadTitle" type="text" placeholder="Pregunta o tema (ej: Duda de Cálculo II)">
+        </div>
+        <div class="form-row">
+          <label>Categoría</label>
+          <select id="threadCategory"><option>General</option><option>Materias</option><option>Recursos</option><option>Tutorias</option></select>
+        </div>
+        <div class="form-row">
+          <label>Contenido</label>
+          <textarea id="threadBody" placeholder="Explica tu duda o comparte el recurso..."></textarea>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn ghost" id="closeNew">Cancelar</button>
+          <button class="btn" id="publishBtn">Publicar</button>
+        </div>
+      </div>
     </div>
 
-    <form id="form">
-      <textarea id="mensaje" rows="3" placeholder="¿Qué estás pensando?" required></textarea>
-      <input type="file" id="imagen" accept="image/*">
-      <button type="submit">Publicar</button>
-    </form>
-
-    <div id="posts">
-      <h2>Publicaciones recientes</h2>
+    <!-- modal login -->
+    <div class="modal-back" id="modalLogin">
+      <div class="modal">
+        <h3>Iniciar sesión (simulado)</h3>
+        <div class="form-row">
+          <label>Nombre</label>
+          <input id="loginName" type="text" placeholder="Tu nombre (ej: Carol Abril)">
+        </div>
+        <div class="form-row">
+          <label>Carrera</label>
+          <input id="loginMajor" type="text" placeholder="Tu carrera (ej: Ingeniería)" />
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn ghost" id="closeLogin">Cancelar</button>
+          <button class="btn" id="doLogin">Ingresar</button>
+        </div>
+      </div>
     </div>
+
+    <!-- modal ver tema -->
+    <div class="modal-back" id="modalView">
+      <div class="modal" id="viewModalContent">
+        <!-- rellenado por JS -->
+      </div>
+    </div>
+
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      let currentUser = "";
-      let publicaciones = JSON.parse(localStorage.getItem("publicaciones")) || [];
+    // --- Datos iniciales (simulados) ---
+    const STORAGE_KEY = 'pabos_forum_v1';
+    const sample = {
+      users: [
+        {id: 'u1', name: 'Brian H.', major:'Ing. Sistemas', reputation: 38},
+        {id: 'u2', name: 'Mariana P.', major:'Diseño', reputation: 22},
+        {id: 'u3', name: 'Carol Abril', major:'Psicología', reputation: 55}
+      ],
+      threads: [
+        {id:'t1',title:'¿Alguien tiene apuntes de Cálculo II?',category:'Recursos',authorId:'u3',body:'Busco resumen del tema de integrales impropias y técnicas de integración.',votes:6,created:Date.now()-1000*60*60*24*2,replies:[{id:'r1',authorId:'u1',body:'Te comparto un PDF en Drive: ...',created:Date.now()-1000*60*60*24*1}]},
+        {id:'t2',title:'Problemas con instalación de Python',category:'Materias',authorId:'u1',body:'Al instalar pip me da error de permisos en Windows.',votes:3,created:Date.now()-1000*60*60*6,replies:[]},
+        {id:'t3',title:'Busco tutoría para proyectos de interfaz',category:'Tutorias',authorId:'u2',body:'¿Alguien que pueda revisar mi prototipo? puedo pagar en puntos.',votes:2,created:Date.now()-1000*60*20,replies:[]}
+      ]
+    };
 
-      const loginBtn = document.getElementById('login-btn');
-      const usernameInput = document.getElementById('username');
-      const loginSection = document.getElementById('login-section');
-      const forumSection = document.getElementById('forum-section');
-      const form = document.getElementById('form');
-      const posts = document.getElementById('posts');
-      const logoutBtn = document.getElementById('logout-btn');
+    // carga o inicializa
+    function load(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) return JSON.parse(raw);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sample));
+      return sample;
+    }
+    let db = load();
 
-      // LOGIN
-      loginBtn.addEventListener('click', () => {
-        currentUser = usernameInput.value.trim();
-        if (currentUser !== "") {
-          loginSection.style.display = 'none';
-          forumSection.style.display = 'block';
-          mostrarPosts();
-        } else {
-          alert("Por favor, ingresa tu nombre de usuario.");
-        }
+    // Estado de sesión simple
+    let sessionUser = null;
+
+    // util
+    const byId = id=>document.getElementById(id);
+
+    // render lista top
+    function renderTop(){
+      const ul = byId('topList'); ul.innerHTML = '';
+      const users = [...db.users].sort((a,b)=>b.reputation-a.reputation).slice(0,5);
+      users.forEach(u=>{const li=document.createElement('li'); li.textContent = ${u.name} — ${u.reputation} pts; ul.appendChild(li)});
+    }
+
+    // render threads
+    function renderThreads(filter='all',q=''){
+      const container = byId('threadsList'); container.innerHTML = '';
+      let threads = db.threads.slice();
+      const sort = byId('sortSelect').value;
+      if(filter!=='all') threads = threads.filter(t=>t.category===filter);
+      if(q) threads = threads.filter(t=> (t.title+t.body).toLowerCase().includes(q.toLowerCase()));
+      if(sort==='new') threads.sort((a,b)=>b.created-a.created);
+      if(sort==='top') threads.sort((a,b)=>b.votes-b.votes?b.votes-a.votes: b.created-a.created);
+      if(sort==='answered') threads.sort((a,b)=> (b.replies.length - a.replies.length) || (b.created-a.created));
+
+      threads.forEach(t=>{
+        const el = document.createElement('div'); el.className='thread';
+        el.innerHTML = `
+          <div class="votes">
+            <button class="up" data-id="${t.id}">▲</button>
+            <div style="font-size:14px;font-weight:700">${t.votes}</div>
+          </div>
+          <div class="thread-content">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <div class="thread-title">${escapeHtml(t.title)}</div>
+                <div class="thread-meta">Publicado por ${getUserName(t.authorId)} · ${timeAgo(t.created)} · <span style="color:var(--muted)">${t.replies.length} respuestas</span></div>
+              </div>
+              <div class="tags"><div class="tag">${t.category}</div></div>
+            </div>
+            <div style="margin-top:8px;color:var(--muted);font-size:14px">${escapeHtml(t.body.slice(0,220))}${t.body.length>220? '...':''}</div>
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button class="btn ghost viewBtn" data-id="${t.id}">Ver tema</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(el);
       });
 
-      // CERRAR SESIÓN
-      logoutBtn.addEventListener('click', () => {
-        currentUser = "";
-        usernameInput.value = "";
-        forumSection.style.display = 'none';
-        loginSection.style.display = 'block';
-      });
+      // attach events
+      document.querySelectorAll('.up').forEach(b=>b.onclick = e=>{voteThread(e.target.dataset.id,1)});
+      document.querySelectorAll('.viewBtn').forEach(b=>b.onclick = e=>openThread(e.target.dataset.id));
+    }
 
-      // CREAR PUBLICACIÓN
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function getUserName(id){ const u = db.users.find(x=>x.id===id); return u?u.name:'Invitado'; }
+    function timeAgo(ts){ const s = Math.floor((Date.now()-ts)/1000); if(s<60) return s+'s'; if(s<3600) return Math.floor(s/60)+'m'; if(s<86400) return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
 
-        const mensaje = document.getElementById('mensaje').value;
-        const imagenInput = document.getElementById('imagen');
-        const imagen = imagenInput.files[0];
+    function voteThread(id,delta){ const t = db.threads.find(x=>x.id===id); if(!t) return; t.votes += delta; saveDB(); renderThreads('all', byId('searchBox').value); renderTop(); }
 
-        if (!mensaje.trim()) {
-          alert("El mensaje no puede estar vacío.");
-          return;
-        }
+    function openThread(id){ const t = db.threads.find(x=>x.id===id); if(!t) return; const modal = byId('modalView'); modal.style.display='flex'; const box = byId('viewModalContent'); box.innerHTML = '';
+      const author = getUserName(t.authorId);
+      const html = document.createElement('div');
+      html.innerHTML = `
+        <h3>${escapeHtml(t.title)}</h3>
+        <div style="color:var(--muted);font-size:13px">Por ${author} · ${timeAgo(t.created)} · ${t.votes} votos</div>
+        <hr style="margin:12px 0">
+        <div style="white-space:pre-wrap">${escapeHtml(t.body)}</div>
+        <hr style="margin:12px 0">
+        <strong>Respuestas (${t.replies.length})</strong>
+        <div id="repliesBox" style="margin-top:8px"></div>
+        <div style="margin-top:12px">
+          <textarea id="replyText" placeholder="Escribe tu respuesta..."></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button class="btn ghost" id="closeView">Cerrar</button>
+            <button class="btn" id="publishReply">Responder</button>
+          </div>
+        </div>
+      `;
+      box.appendChild(html);
+      const repliesBox = box.querySelector('#repliesBox');
+      t.replies.forEach(r=>{ const u=getUserName(r.authorId); const d=document.createElement('div'); d.style.padding='8px'; d.style.borderRadius='8px'; d.style.border='1px solid #eef7ef'; d.style.marginTop='8px'; d.innerHTML = <div style="font-weight:700">${u} <small style="color:var(--muted);font-weight:400">· ${timeAgo(r.created)}</small></div><div style="margin-top:6px">${escapeHtml(r.body)}</div>; repliesBox.appendChild(d);});
 
-        let nuevaPublicacion = {
-          usuario: currentUser,
-          mensaje: mensaje,
-          fecha: new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }),
-          likes: 0,
-          imagen: null
-        };
-
-        if (imagen) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            nuevaPublicacion.imagen = event.target.result;
-            publicaciones.unshift(nuevaPublicacion);
-            guardarYMostrar();
-          };
-          reader.readAsDataURL(imagen);
-        } else {
-          publicaciones.unshift(nuevaPublicacion);
-          guardarYMostrar();
-        }
-
-        form.reset();
-      });
-
-      // GUARDAR EN LOCALSTORAGE Y MOSTRAR
-      function guardarYMostrar() {
-        localStorage.setItem("publicaciones", JSON.stringify(publicaciones));
-        mostrarPosts();
+      box.querySelector('#closeView').onclick = ()=>{modal.style.display='none';}
+      box.querySelector('#publishReply').onclick = ()=>{
+        const text = box.querySelector('#replyText').value.trim(); if(!text){alert('Escribe algo para responder');return}
+        const rid = 'r'+Math.random().toString(36).slice(2,9);
+        const authorId = sessionUser?sessionUser.id:'guest';
+        const reply = {id:rid,authorId,body:text,created:Date.now()};
+        t.replies.push(reply);
+        // add small reputation if user exists
+        const u = db.users.find(x=>x.id===authorId); if(u) u.reputation += 2;
+        saveDB(); renderTop(); openThread(id); // re-open to refresh
       }
+    }
 
-      // MOSTRAR PUBLICACIONES
-      function mostrarPosts() {
-        posts.innerHTML = <h2>Publicaciones recientes (${publicaciones.length})</h2>;
-        publicaciones.forEach((post, index) => {
-          const div = document.createElement('div');
-          div.className = 'post';
+    // persist
+    function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
 
-          div.innerHTML = `
-            <strong>${post.usuario}</strong>
-            <p>${post.mensaje}</p>
-            <small>${post.fecha}</small>
-            <button onclick="darLike(${index})">👍 Me gusta (${post.likes})</button>
-            <button onclick="leerPost(${index})">🔊 Escuchar</button>
-          `;
+    // eventos UI
+    byId('newThreadBtn').onclick = ()=>{ if(!sessionUser){ alert('Necesitas iniciar sesión (simulada) para crear temas.'); return } byId('modalNew').style.display='flex'; }
+    byId('closeNew').onclick = ()=> byId('modalNew').style.display='none';
+    byId('publishBtn').onclick = ()=>{
+      const title=byId('threadTitle').value.trim(); const body=byId('threadBody').value.trim(); const cat=byId('threadCategory').value;
+      if(!title||!body){ alert('Completa título y contenido'); return }
+      const id = 't'+Math.random().toString(36).slice(2,9);
+      db.threads.push({id,title,category:cat,authorId:sessionUser.id,body,votes:0,created:Date.now(),replies:[]});
+      saveDB(); byId('modalNew').style.display='none'; byId('threadTitle').value=''; byId('threadBody').value=''; renderThreads('all',byId('searchBox').value); renderTop();
+    }
 
-          if (post.imagen) {
-            const img = document.createElement('img');
-            img.src = post.imagen;
-            div.appendChild(img);
-          }
+    byId('loginBtn').onclick = ()=> byId('modalLogin').style.display='flex';
+    byId('closeLogin').onclick = ()=> byId('modalLogin').style.display='none';
+    byId('doLogin').onclick = ()=>{
+      const name = byId('loginName').value.trim(); const major = byId('loginMajor').value.trim();
+      if(!name){ alert('Escribe tu nombre'); return }
+      // create or find user
+      let user = db.users.find(u=>u.name.toLowerCase()===name.toLowerCase());
+      if(!user){ user = {id:'u'+Math.random().toString(36).slice(2,6), name, major:major||'—', reputation:5}; db.users.push(user); }
+      sessionUser = user;
+      saveDB(); updateSessionUI(); byId('modalLogin').style.display='none';
+    }
+    byId('logoutBtn').onclick = ()=>{ sessionUser=null; updateSessionUI(); }
 
-          posts.appendChild(div);
-        });
-      }
+    function updateSessionUI(){ if(sessionUser){ byId('userName').textContent = sessionUser.name; byId('userSub').textContent = sessionUser.major || ''; byId('avatarLetter').textContent = sessionUser.name.slice(0,1); byId('loginBtn').style.display='none'; byId('logoutBtn').style.display='inline-block'; } else{ byId('userName').textContent='Invitado'; byId('userSub').textContent='Sin sesión'; byId('avatarLetter').textContent='G'; byId('loginBtn').style.display='inline-block'; byId('logoutBtn').style.display='none'; } }
 
-      // DAR LIKE
-      window.darLike = function(index) {
-        publicaciones[index].likes++;
-        guardarYMostrar();
-      };
+    // filters
+    document.querySelectorAll('.cat').forEach(c=>c.onclick = e=>{ const cat=e.currentTarget.dataset.cat; byId('currentFilter').textContent=cat; renderThreads(cat, byId('searchBox').value); });
+    byId('sortSelect').onchange = ()=>renderThreads('all',byId('searchBox').value);
+    byId('searchBox').oninput = ()=>renderThreads('all',byId('searchBox').value);
 
-      // LECTURA DE VOZ (accesibilidad visual)
-      window.leerPost = function(index) {
-        const post = publicaciones[index];
-        const speech = new SpeechSynthesisUtterance(${post.usuario} publicó: ${post.mensaje});
-        speech.lang = 'es-MX';
-        speechSynthesis.speak(speech);
-      };
-    });
+    // profile btn
+    byId('myProfileBtn').onclick = ()=>{
+      if(!sessionUser){ alert('Inicia sesión para ver tu perfil'); return }
+      const modal = byId('modalView'); modal.style.display='flex'; const box = byId('viewModalContent'); box.innerHTML = <h3>Perfil — ${escapeHtml(sessionUser.name)}</h3><div style="color:var(--muted)">${escapeHtml(sessionUser.major||'—')}</div><hr><div><strong>Reputación: </strong>${sessionUser.reputation} pts</div><div style="margin-top:8px"><strong>Tus temas publicados:</strong><ul>${db.threads.filter(t=>t.authorId===sessionUser.id).map(t=>'<li>'+escapeHtml(t.title)+'</li>').join('')}</ul></div><div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn" id="closeProf">Cerrar</button></div>;
+      box.querySelector('#closeProf').onclick = ()=>{ modal.style.display='none'; }
+    }
+
+    // inicial
+    renderTop(); renderThreads('all',''); updateSessionUI();
+
+    // cerrar modales al clickear fondo
+    document.querySelectorAll('.modal-back').forEach(m=>m.onclick = e=>{ if(e.target===m) m.style.display='none'; });
+
+    // small helpers
+    // When user replies, we re-open; to avoid nested issues, override openThread to refresh
+
   </script>
 </body>
 </html>
