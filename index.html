@@ -1,485 +1,574 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PABOSCONNECT — Foro académico (Forest theme)</title>
-  <style>
-    :root{
-      --bg-light: #f3efe6;       /* claro: café muy suave */
-      --card-light: #fffefc;
-      --text-light: #2b2119;    /* café oscuro para texto */
-      --accent-green: #2f8f5a;  /* verde acento */
-      --accent-brown: #8b5e3c;  /* café acento */
-      --muted: #6b6b68;
-      --glass: rgba(255,255,255,0.7);
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PABOSCONNECT — Foro académico (Forest theme)</title>
+  <style>
+    :root{
+      --bg-light: #f3efe6;       /* claro: café muy suave */
+      --card-light: #fffefc;
+      --text-light: #2b2119;    /* café oscuro para texto */
+      --accent-green: #2f8f5a;  /* verde acento */
+      --accent-brown: #8b5e3c;  /* café acento */
+      --muted: #6b6b68;
+      --glass: rgba(255,255,255,0.7);
+    }
+
+    /* Dark (forest): café oscuro fondo + acentos verdes) */
+    .dark {
+      --bg-light: #1e1410;      /* fondo oscuro cafe */
+      --card-light: #241815;    /* tarjeta cafe oscuro */
+      --text-light: #e9eadf;    /* texto claro */
+      --accent-green: #62c78b;
+      --accent-brown: #a8794f;
+      --muted: #9a8f87;
+      --glass: rgba(255,255,255,0.03);
+    }
+
+    /* === [NUEVO] Filtros de Accesibilidad (Daltonismo) === */
+        
+    /* --- Protanopia / Deuteranopia (Rojo/Verde) --- */
+    /* Cambia Verde -> Azul, Café -> Naranja */
+    
+    html[data-cbf="protan"],
+    html[data-cbf="deutan"] {
+      --accent-green: #007bff; /* Azul */
+      --accent-brown: #fd7e14; /* Naranja */
+    }
+    
+    html[data-cbf="protan"] .votes,
+    html[data-cbf="deutan"] .votes {
+      background: rgba(0, 123, 255, 0.06); /* Fondo Votos Azul */
+      border-color: rgba(0, 123, 255, 0.06);
+    }
+    
+    html[data-cbf="protan"] .tag,
+    html[data-cbf="deutan"] .tag {
+      background: rgba(0, 123, 255, 0.08); /* Fondo Tag Azul */
+    }
+    
+    /* Dark Mode - Protan/Deutan */
+    html[data-cbf="protan"].dark,
+    html[data-cbf="deutan"].dark {
+      --accent-green: #58a6ff; /* Azul claro */
+      --accent-brown: #f0883e; /* Naranja claro */
     }
 
-    /* Dark (forest): café oscuro fondo + acentos verdes) */
-    .dark {
-      --bg-light: #1e1410;      /* fondo oscuro cafe */
-      --card-light: #241815;    /* tarjeta cafe oscuro */
-      --text-light: #e9eadf;    /* texto claro */
-      --accent-green: #62c78b;
-      --accent-brown: #a8794f;
-      --muted: #9a8f87;
-      --glass: rgba(255,255,255,0.03);
+    /* --- Tritanopia (Azul/Amarillo) --- */
+    /* Cambia Verde -> Cian, Café -> Rojo */
+    
+    html[data-cbf="tritan"] {
+      --accent-green: #17a2b8; /* Cian */
+      --accent-brown: #d73a49; /* Rojo */
     }
+    
+    html[data-cbf="tritan"] .votes {
+      background: rgba(23, 162, 184, 0.06); /* Fondo Votos Cian */
+      border-color: rgba(23, 162, 184, 0.06);
+    }
+    
+    html[data-cbf="tritan"] .tag {
+      background: rgba(23, 162, 184, 0.08); /* Fondo Tag Cian */
+    }
+    
+    /* Dark Mode - Tritan */
+    html[data-cbf="tritan"].dark {
+      --accent-green: #61dafb; /* Cian claro */
+      --accent-brown: #f85149; /* Rojo claro */
+    }
+    /* === FIN [NUEVO] === */
 
-    html,body{height:100%;margin:0;background:var(--bg-light);color:var(--text-light);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
-    .app{max-width:1100px;margin:24px auto;padding:18px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card-light);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{height:56px;width:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent;border:2px solid rgba(0,0,0,0.04)}
-    .logo img{height:56px;width:auto;display:block}
-    h1{margin:0;font-size:20px}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
 
-    .top-actions{display:flex;gap:8px;align-items:center}
-    .btn{background:var(--accent-green);color:white;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
-    .btn.ghost{background:transparent;color:var(--accent-brown);border:2px solid var(--accent-brown)}
-    .search{display:flex;align-items:center;gap:8px;background:var(--card-light);padding:6px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
-    input.search-in{border:0;outline:0;padding:6px;min-width:220px;background:transparent;color:var(--text-light)}
+    html,body{height:100%;margin:0;background:var(--bg-light);color:var(--text-light);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    .app{max-width:1100px;margin:24px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card-light);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{height:56px;width:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent;border:2px solid rgba(0,0,0,0.04)}
+    .logo img{height:56px;width:auto;display:block}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
 
-    main{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--accent-green);color:white;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;color:var(--accent-brown);border:2px solid var(--accent-brown)}
+    .search{display:flex;align-items:center;gap:8px;background:var(--card-light);padding:6px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
+    input.search-in{border:0;outline:0;padding:6px;min-width:220px;background:transparent;color:var(--text-light)}
 
-    .card{background:var(--card-light);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.03)}
-    .profile{display:flex;gap:12px;align-items:center}
-    .avatar{width:64px;height:64px;border-radius:10px;background:linear-gradient(180deg,#cfc1b7,#fff);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-brown)}
-    .meta small{color:var(--muted)}
-    .categories{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-    .cat{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;cursor:pointer}
-    .cat:hover{background:rgba(0,0,0,0.02)}
+    main{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
 
-    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .threads{display:flex;flex-direction:column;gap:12px}
-    .thread{display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);align-items:flex-start;background:var(--card-light)}
-    .votes{width:56px;display:flex;flex-direction:column;align-items:center;padding:6px;border-radius:8px;background:rgba(47,143,90,0.06);border:1px solid rgba(47,143,90,0.06)}
-    .votes button{background:transparent;border:0;cursor:pointer;font-weight:700;color:var(--accent-green)}
-    .thread-content{flex:1}
-    .thread-title{font-weight:700;margin:0}
-    .thread-meta{color:var(--muted);font-size:13px}
-    .tags{display:flex;gap:6px;margin-top:8px}
-    .tag{background:rgba(47,143,90,0.08);padding:4px 8px;border-radius:999px;font-size:12px;color:var(--accent-green)}
+    .card{background:var(--card-light);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.03)}
+    .profile{display:flex;gap:12px;align-items:center}
+    .avatar{width:64px;height:64px;border-radius:10px;background:linear-gradient(180deg,#cfc1b7,#fff);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-brown)}
+    .meta small{color:var(--muted)}
+    .categories{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .cat{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;cursor:pointer}
+    .cat:hover{background:rgba(0,0,0,0.02)}
 
-    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .threads{display:flex;flex-direction:column;gap:12px}
+    .thread{display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);align-items:flex-start;background:var(--card-light)}
+    .votes{width:56px;display:flex;flex-direction:column;align-items:center;padding:6px;border-radius:8px;background:rgba(47,143,90,0.06);border:1px solid rgba(47,143,90,0.06)}
+    .votes button{background:transparent;border:0;cursor:pointer;font-weight:700;color:var(--accent-green)}
+    .thread-content{flex:1}
+    .thread-title{font-weight:700;margin:0}
+    .thread-meta{color:var(--muted);font-size:13px}
+    .tags{display:flex;gap:6px;margin-top:8px}
+    .tag{background:rgba(47,143,90,0.08);padding:4px 8px;border-radius:999px;font-size:12px;color:var(--accent-green)}
 
-    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
-    .modal{width:100%;max-width:720px;background:var(--card-light);border-radius:12px;padding:16px}
-    .form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-    textarea{min-height:100px;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text-light)}
-    input[type=text],select{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text-light)}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
 
-    .read-btn{background:transparent;border:0;cursor:pointer;color:var(--accent-brown);font-weight:700;padding:6px;border-radius:6px}
+    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
+    .modal{width:100%;max-width:720px;background:var(--card-light);border-radius:12px;padding:16px}
+    .form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+    textarea{min-height:100px;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text-light)}
+    input[type=text],select{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text-light)}
 
-    @media(max-width:900px){main{grid-template-columns:1fr} .logo{display:none}}
+    .read-btn{background:transparent;border:0;cursor:pointer;color:var(--accent-brown);font-weight:700;padding:6px;border-radius:6px}
 
-    /* Dark tweaks */
-    .dark header{background:var(--card-light);box-shadow:none}
-    .dark .card{box-shadow:none;border:1px solid rgba(255,255,255,0.03)}
-    .dark input, .dark textarea, .dark select{background:#36251f;color:var(--text-light);border:1px solid rgba(255,255,255,0.06)}
-  </style>
+    @media(max-width:900px){main{grid-template-columns:1fr} .logo{display:none}}
+
+    /* Dark tweaks */
+    .dark header{background:var(--card-light);box-shadow:none}
+    .dark .card{box-shadow:none;border:1px solid rgba(255,255,255,0.03)}
+    .dark input, .dark textarea, .dark select{background:#36251f;color:var(--text-light);border:1px solid rgba(255,255,255,0.06)}
+  </style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo" title="Logo Foro de Pabos">
-          <!-- === LOGO (BASE64) ===
-               Reemplaza LOGO_BASE64 por la cadena base64 completa de tu imagen (sin espacios) para ver el pavo real.
-               Por ahora hay un pequeño placeholder 1x1 PNG para que no rompa la página. -->
-          <img id="siteLogo" alt="logo pavo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HwAF/wJ+e0rVAAAAAElFTkSuQmCC" />
-        </div>
-        <div>
-          <h1 id="siteTitle">PABOSCONNECT</h1>
-          <p class="lead">Foro académico — Interacción Humano-Computadora (UACJ)</p>
-        </div>
-      </div>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" title="Logo Foro de Pabos">
+                    <img id="siteLogo" alt="logo pavo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HwAF/wJ+e0rVAAAAAElFTkSuQmCC" />
+        </div>
+        <div>
+          <h1 id="siteTitle">PABOSCONNECT</h1>
+          <p class="lead">Foro académico — Interacción Humano-Computadora (UACJ)</p>
+        </div>
+      </div>
 
-      <div class="top-actions">
-        <div class="search card" style="display:flex;align-items:center">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#6b7280" d="M9.5 3a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM20.7 20.3 16 15.6"/></svg>
-          <input id="searchBox" class="search-in" placeholder="Buscar temas, materias, autores..." />
-        </div>
-        <button class="btn" id="newThreadBtn">+ Crear tema</button>
-        <button class="btn ghost" id="loginBtn">Iniciar sesión</button>
-        <button class="btn ghost" id="themeToggle" title="Cambiar tema">🌙</button>
-      </div>
-    </header>
+      <div class="top-actions">
+        <div class="search card" style="display:flex;align-items:center">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#6b7280" d="M9.5 3a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM20.7 20.3 16 15.6"/></svg>
+s          <input id="searchBox" class="search-in" placeholder="Buscar temas, materias, autores..." />
+        </div>
+        <button class="btn" id="newThreadBtn">+ Crear tema</button>
+        <button class="btn ghost" id="loginBtn">Iniciar sesión</button>
+        <button class="btn ghost" id="themeToggle" title="Cambiar tema">🌙</button>
+                <button class="btn ghost" id="a11yFilterBtn" title="Cambiar filtro de color">🎨</button>
+      </div>
+    </header>
 
-    <main>
-      <aside>
-        <div class="card">
-          <div class="profile">
-            <div class="avatar" id="avatarLetter">G</div>
-            <div class="meta">
-              <div id="userName">Invitado</div>
-              <small id="userSub">Sin sesión</small>
-            </div>
-          </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button class="btn" id="myProfileBtn">Mi perfil</button>
-            <button class="btn ghost" id="logoutBtn" style="display:none">Cerrar</button>
-          </div>
+    <main>
+      <aside>
+        <div class="card">
+          <div class="profile">
+            <div class="avatar" id="avatarLetter">G</div>
+            <div class="meta">
+              <div id="userName">Invitado</div>
+              <small id="userSub">Sin sesión</small>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn" id="myProfileBtn">Mi perfil</button>
+            <button class="btn ghost" id="logoutBtn" style="display:none">Cerrar</button>
+          </div>
 
-          <div class="categories" style="margin-top:12px">
-            <div><strong>Categorías</strong></div>
-            <div class="cat" data-cat="all">Todos</div>
-            <div class="cat" data-cat="General">General <small style="color:var(--muted)"> – charla</small></div>
-            <div class="cat" data-cat="Materias">Materias <small style="color:var(--muted)"> – dudas</small></div>
-            <div class="cat" data-cat="Recursos">Recursos <small style="color:var(--muted)"> – apuntes</small></div>
-            <div class="cat" data-cat="Tutorias">Tutorías <small style="color:var(--muted)"> – ayuda</small></div>
-          </div>
-        </div>
+          <div class="categories" style="margin-top:12px">
+            <div><strong>Categorías</strong></div>
+            <div class="cat" data-cat="all">Todos</div>
+            <div class="cat" data-cat="General">General <small style="color:var(--muted)"> – charla</small></div>
+            <div class="cat" data-cat="Materias">Materias <small style="color:var(--muted)"> – dudas</small></div>
+            <div class="cat" data-cat="Recursos">Recursos <small style="color:var(--muted)"> – apuntes</small></div>
+            <div class="cat" data-cat="Tutorias">Tutorías <small style="color:var(--muted)"> – ayuda</small></div>
+          </div>
+        </div>
 
-        <div class="card" style="margin-top:12px">
-          <strong>Top colaboradores</strong>
-          <ul id="topList" style="padding-left:16px;margin-top:8px;color:var(--muted)"></ul>
-        </div>
-      </aside>
+        <div class="card" style="margin-top:12px">
+          <strong>Top colaboradores</strong>
+          <ul id="topList" style="padding-left:16px;margin-top:8px;color:var(--muted)"></ul>
+        </div>
+      </aside>
 
-      <section>
-        <div class="toolbar">
-          <div>
-            <strong id="currentFilter">Todos los temas</strong>
-            <div style="color:var(--muted);font-size:13px">Filtra por categoría o busca palabras clave</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <select id="sortSelect">
-              <option value="new">Más recientes</option>
-              <option value="top">Más votados</option>
-              <option value="answered">Más respondidos</option>
-            </select>
-          </div>
-        </div>
+      <section>
+        <div class="toolbar">
+          <div>
+            <strong id="currentFilter">Todos los temas</strong>
+            <div style="color:var(--muted);font-size:13px">Filtra por categoría o busca palabras clave</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="sortSelect">
+              <option value="new">Más recientes</option>
+              <option value="top">Más votados</option>
+              <option value="answered">Más respondidos</option>
+            </select>
+          </div>
+        </div>
 
-        <div class="threads" id="threadsList"></div>
+        <div class="threads" id="threadsList"></div>
 
-        <footer>
-          Prototipo — PABOSCONNECT · Foro académico para la UACJ · (Frontend sin back-end, datos guardados en tu navegador)
-        </footer>
-      </section>
-    </main>
-  </div>
+        <footer>
+          Prototipo — PABOSCONNECT · Foro académico para la UACJ · (Frontend sin back-end, datos guardados en tu navegador)
+        </footer>
+      </section>
+    </main>
+  </div>
 
-  <!-- Modal: nuevo tema -->
-  <div class="modal-back" id="modalNew">
-    <div class="modal">
-      <h3>Crear nuevo tema</h3>
-      <div class="form-row">
-        <label>Título</label>
-        <input id="threadTitle" type="text" placeholder="Pregunta o tema (ej: Duda de Cálculo II)">
-      </div>
-      <div class="form-row">
-        <label>Categoría</label>
-        <select id="threadCategory"><option>General</option><option>Materias</option><option>Recursos</option><option>Tutorias</option></select>
-      </div>
-      <div class="form-row">
-        <label>Contenido</label>
-        <textarea id="threadBody" placeholder="Explica tu duda o comparte el recurso..."></textarea>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn ghost" id="closeNew">Cancelar</button>
-        <button class="btn" id="publishBtn">Publicar</button>
-      </div>
-    </div>
-  </div>
+    <div class="modal-back" id="modalNew">
+    <div class="modal">
+      <h3>Crear nuevo tema</h3>
+      <div class="form-row">
+        <label>Título</label>
+        <input id="threadTitle" type="text" placeholder="Pregunta o tema (ej: Duda de Cálculo II)">
+      </div>
+      <div class="form-row">
+        <label>Categoría</label>
+        <select id="threadCategory"><option>General</option><option>Materias</option><option>Recursos</option><option>Tutorias</option></select>
+      </div>
+      <div class="form-row">
+        <label>Contenido</label>
+        <textarea id="threadBody" placeholder="Explica tu duda o comparte el recurso..."></textarea>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn ghost" id="closeNew">Cancelar</button>
+        <button class="btn" id="publishBtn">Publicar</button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Modal: login -->
-  <div class="modal-back" id="modalLogin">
-    <div class="modal">
-      <h3>Iniciar sesión (simulado)</h3>
-      <div class="form-row">
-        <label>Nombre</label>
-        <input id="loginName" type="text" placeholder="Tu nombre (ej: Carol Abril)">
-      </div>
-      <div class="form-row">
-        <label>Carrera</label>
-        <input id="loginMajor" type="text" placeholder="Tu carrera (ej: Ingeniería)" />
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn ghost" id="closeLogin">Cancelar</button>
-        <button class="btn" id="doLogin">Ingresar</button>
-      </div>
-    </div>
-  </div>
+    <div class="modal-back" id="modalLogin">
+    <div class="modal">
+      <h3>Iniciar sesión (simulado)</h3>
+      <div class="form-row">
+        <label>Nombre</label>
+        <input id="loginName" type="text" placeholder="Tu nombre (ej: Carol Abril)">
+      </div>
+      <div class="form-row">
+        <label>Carrera</label>
+        <input id="loginMajor" type="text" placeholder="Tu carrera (ej: Ingeniería)" />
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn ghost" id="closeLogin">Cancelar</button>
+        <button class="btn" id="doLogin">Ingresar</button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Modal: ver tema / respuestas -->
-  <div class="modal-back" id="modalView">
-    <div class="modal" id="viewModalContent"></div>
-  </div>
+    <div class="modal-back" id="modalView">
+    <div class="modal" id="viewModalContent"></div>
+  </div>
 
-  <script>
-    // ===== keys =====
-    const STORAGE_KEY = 'pabos_forum_forest_v1';
-    const THEME_KEY = 'pabos_theme_forest_v1';
-    const SESSION_KEY = 'pabos_session_v1';
+  <script>
+    // ===== keys =====
+    const STORAGE_KEY = 'pabos_forum_forest_v1';
+    const THEME_KEY = 'pabos_theme_forest_v1';
+    const SESSION_KEY = 'pabos_session_v1';
+    const A11Y_KEY = 'pabos_a11y_filter_v1'; /* === [NUEVO] Key para filtro A11y === */
 
-    // ===== sample data (guardados si no hay localStorage) =====
-    const sample = {
-      users: [
-        {id: 'u1', name: 'Brian H.', major:'Ing. Sistemas', reputation: 38},
-        {id: 'u2', name: 'Mariana P.', major:'Diseño', reputation: 22},
-        {id: 'u3', name: 'Carol Abril', major:'Psicología', reputation: 55}
-      ],
-      threads: [
-        {id:'t1',title:'¿Qué opinan del nuevo módulo?',category:'General',authorId:'u1',body:'Creo que el nuevo módulo está bien diseñado, aunque algunos temas son algo pesados.',votes:5,created:Date.now()-1000*60*60*24*3,replies:[{id:'r1',authorId:'u2',body:'Yo creo que con prácticas se entiende.',created:Date.now()-1000*60*60*24*2}]},
-        {id:'t2',title:'Consejos para estadística',category:'Materias',authorId:'u3',body:'Revisen bien los conceptos de probabilidad y practiquen muchos ejercicios.',votes:6,created:Date.now()-1000*60*60*24*1,replies:[]}
-      ]
+    // ===== sample data (guardados si no hay localStorage) =====
+    const sample = {
+      users: [
+        {id: 'u1', name: 'Brian H.', major:'Ing. Sistemas', reputation: 38},
+        {id: 'u2', name: 'Mariana P.', major:'Diseño', reputation: 22},
+        {id: 'u3', name: 'Carol Abril', major:'Psicología', reputation: 55}
+      ],
+      threads: [
+        {id:'t1',title:'¿Qué opinan del nuevo módulo?',category:'General',authorId:'u1',body:'Creo que el nuevo módulo está bien diseñado, aunque algunos temas son algo pesados.',votes:5,created:Date.now()-1000*60*60*24*3,replies:[{id:'r1',authorId:'u2',body:'Yo creo que con prácticas se entiende.',created:Date.now()-1000*60*60*24*2}]},
+        {id:'t2',title:'Consejos para estadística',category:'Materias',authorId:'u3',body:'Revisen bien los conceptos de probabilidad y practiquen muchos ejercicios.',votes:6,created:Date.now()-1000*60*60*24*1,replies:[]}
+      ]
+    };
+
+    // ===== load/save =====
+    function loadDB(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) return JSON.parse(raw);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sample));
+      return JSON.parse(JSON.stringify(sample));
+    }
+    let db = loadDB();
+
+    // session (persistente)
+    function loadSession(){
+      const s = localStorage.getItem(SESSION_KEY);
+      return s ? JSON.parse(s) : null;
+    }
+    let sessionUser = loadSession();
+
+    // theme
+    function initTheme(){
+      const saved = localStorage.getItem(THEME_KEY);
+      if(saved === 'dark'){ document.documentElement.classList.add('dark'); document.getElementById('themeToggle').textContent = '☀️'; }
+      else { document.documentElement.classList.remove('dark'); document.getElementById('themeToggle').textContent = '🌙'; }
+    }
+
+    /* === [NUEVO] Inicializar filtro A11y === */
+    function initA11yFilter(){
+      const saved = localStorage.getItem(A11Y_KEY);
+      if(saved){
+        document.documentElement.dataset.cbf = saved;
+        byId('a11yFilterBtn').textContent = saved.charAt(0).toUpperCase();
+        byId('a11yFilterBtn').title = `Filtro actual: ${saved}`;
+      }
+    }
+
+    const byId = id => document.getElementById(id);
+
+    // ===== render top collaborators =====
+    function renderTop(){
+      const ul = byId('topList'); ul.innerHTML = '';
+      const users = [...db.users].sort((a,b)=>b.reputation-a.reputation).slice(0,6);
+      users.forEach(u=>{
+        const li=document.createElement('li'); li.textContent = `${u.name} — ${u.reputation} pts`; ul.appendChild(li);
+      });
+    }
+
+    // ===== render threads list =====
+    function renderThreads(filter='all', q=''){
+      const container = byId('threadsList'); container.innerHTML = '';
+      let threads = db.threads.slice();
+      const sort = byId('sortSelect').value;
+      if(filter && filter!=='all') threads = threads.filter(t=>t.category===filter);
+      if(q) threads = threads.filter(t=> (t.title + ' ' + t.body).toLowerCase().includes(q.toLowerCase()));
+      if(sort==='new') threads.sort((a,b)=>b.created-a.created);
+      if(sort==='top') threads.sort((a,b)=> (b.votes - a.votes) || (b.created - a.created));
+      if(sort==='answered') threads.sort((a,b)=> (b.replies.length - a.replies.length) || (b.created - a.created));
+
+      threads.forEach(t=>{
+        const el = document.createElement('div'); el.className='thread';
+        const preview = escapeHtml(t.body.slice(0,240)) + (t.body.length>240 ? '...' : '');
+        el.innerHTML = `
+          <div class="votes">
+            <button class="up" data-id="${t.id}">▲</button>
+            <div style="font-size:14px;font-weight:700">${t.votes}</div>
+            <button class="down" data-id="${t.id}">▼</button>
+          </div>
+          <div class="thread-content">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="thread-title">${escapeHtml(t.title)}</div>
+                <div class="thread-meta">Publicado por ${getUserName(t.authorId)} · ${timeAgo(t.created)} · <span style="color:var(--muted)">${t.replies.length} respuestas</span></div>
+              </div>
+              <div class="tags"><div class="tag">${escapeHtml(t.category)}</div></div>
+            </div>
+            <div style="margin-top:8px;color:var(--muted);font-size:14px">${preview}</div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <button class="btn ghost viewBtn" data-id="${t.id}">Ver tema</button>
+              <button class="read-btn" data-id="${t.id}" data-type="preview">🔊 Leer</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+
+      // events
+      document.querySelectorAll('.up').forEach(b=>b.onclick = e=>voteThread(e.currentTarget.dataset.id,1));
+      document.querySelectorAll('.down').forEach(b=>b.onclick = e=>voteThread(e.currentTarget.dataset.id,-1));
+      document.querySelectorAll('.viewBtn').forEach(b=>b.onclick = e=>openThread(e.currentTarget.dataset.id));
+      document.querySelectorAll('.read-btn').forEach(b=>b.onclick = e=>{
+        const id = e.currentTarget.dataset.id;
+        const t = db.threads.find(x=>x.id===id);
+        if(!t) return;
+        speak(`${t.title}. ${t.body}`);
+      });
+    }
+
+    function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function getUserName(id){ const u = db.users.find(x=>x.id===id); return u?u.name:'Invitado'; }
+    function timeAgo(ts){ const s = Math.floor((Date.now()-ts)/1000); if(s<60) return s+'s'; if(s<3600) return Math.floor(s/60)+'m'; if(s<86400) return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
+
+    function voteThread(id,delta){
+      const t = db.threads.find(x=>x.id===id); if(!t) return;
+      t.votes = (t.votes||0) + delta;
+      saveDB(); renderThreads(currentFilter, byId('searchBox').value); renderTop();
+    }
+
+    function openThread(id){
+      const t = db.threads.find(x=>x.id===id); if(!t) return;
+      const modal = byId('modalView'); modal.style.display='flex';
+      const box = byId('viewModalContent'); box.innerHTML = '';
+      const author = getUserName(t.authorId);
+
+      const html = document.createElement('div');
+      html.innerHTML = `
+        <h3>${escapeHtml(t.title)}</h3>
+        <div style="color:var(--muted);font-size:13px">Por ${author} · ${timeAgo(t.created)} · ${t.votes} votos</div>
+        <div style="margin-top:8px"><button class="read-btn" id="readThreadFull">🔊 Leer tema completo</button></div>
+        <hr style="margin:12px 0">
+        <div style="white-space:pre-wrap">${escapeHtml(t.body)}</div>
+        <hr style="margin:12px 0">
+        <strong>Respuestas (${t.replies.length})</strong>
+        <div id="repliesBox" style="margin-top:8px"></div>
+        <div style="margin-top:12px">
+          <textarea id="replyText" placeholder="Escribe tu respuesta..."></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button class="btn ghost" id="closeView">Cerrar</button>
+            <button class="btn" id="publishReply">Responder</button>
+          </div>
+        </div>
+      `;
+      box.appendChild(html);
+
+      const repliesBox = box.querySelector('#repliesBox');
+      t.replies.forEach(r=>{
+        const u = getUserName(r.authorId);
+        const d = document.createElement('div');
+        d.style.padding='8px'; d.style.borderRadius='8px'; d.style.border='1px solid rgba(0,0,0,0.04)'; d.style.marginTop='8px';
+        d.innerHTML = `<div style="font-weight:700">${escapeHtml(u)} <small style="color:var(--muted);font-weight:400">· ${timeAgo(r.created)}</small></div><div style="margin-top:6px">${escapeHtml(r.body)}</div><div style="margin-top:6px"><button class="read-btn reply-read" data-id="${r.id}">🔊 Leer respuesta</button></div>`;
+        repliesBox.appendChild(d);
+      });
+
+      box.querySelector('#closeView').onclick = ()=>{ modal.style.display='none'; }
+      box.querySelector('#publishReply').onclick = ()=>{
+        const text = box.querySelector('#replyText').value.trim(); if(!text){ alert('Escribe algo para responder'); return }
+        const rid = 'r'+Math.random().toString(36).slice(2,9);
+        const authorId = sessionUser?sessionUser.id:'guest';
+        const reply = {id:rid,authorId,body:text,created:Date.now()};
+        t.replies.push(reply);
+        const u = db.users.find(x=>x.id===authorId); if(u) u.reputation += 2;
+        saveDB(); renderTop(); openThread(id); // re-open refreshed
+      }
+
+      box.querySelector('#readThreadFull').onclick = ()=> speak(`${t.title}. ${t.body}. Respuestas: ${t.replies.length}`);
+      box.querySelectorAll('.reply-read').forEach(b=>{
+        b.onclick = e=>{
+          const rid = e.currentTarget.dataset.id;
+          const r = t.replies.find(x=>x.id===rid);
+          if(r) speak(`${getUserName(r.authorId)} dijo: ${r.body}`);
+        };
+      });
+    }
+
+    function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
+    function saveSession(){ localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser)); }
+
+    // ===== events UI =====
+    byId('newThreadBtn').onclick = ()=>{ if(!sessionUser){ alert('Necesitas iniciar sesión para crear temas.'); return } byId('modalNew').style.display='flex'; }
+    byId('closeNew').onclick = ()=> byId('modalNew').style.display='none';
+    byId('publishBtn').onclick = ()=>{
+      const title = byId('threadTitle').value.trim();
+      const body = byId('threadBody').value.trim();
+      const cat = byId('threadCategory').value;
+      if(!title || !body){ alert('Completa título y contenido'); return }
+      const id = 't'+Math.random().toString(36).slice(2,9);
+      db.threads.push({id,title,category:cat,authorId:sessionUser.id,body,votes:0,created:Date.now(),replies:[]});
+      const me = db.users.find(x=>x.id===sessionUser.id); if(me) me.reputation = (me.reputation||0)+3;
+      saveDB();
+      byId('modalNew').style.display='none';
+      byId('threadTitle').value=''; byId('threadBody').value='';
+      renderThreads(currentFilter, byId('searchBox').value); renderTop();
+    }
+
+    // login
+    byId('loginBtn').onclick = ()=> byId('modalLogin').style.display='flex';
+    byId('closeLogin').onclick = ()=> byId('modalLogin').style.display='none';
+    byId('doLogin').onclick = ()=>{
+      const name = byId('loginName').value.trim(); const major = byId('loginMajor').value.trim();
+      if(!name){ alert('Escribe tu nombre'); return }
+      let user = db.users.find(u=>u.name.toLowerCase()===name.toLowerCase());
+      if(!user){ user = {id:'u'+Math.random().toString(36).slice(2,6), name, major:major||'—', reputation:5}; db.users.push(user); }
+      sessionUser = user;
+      saveDB(); saveSession(); updateSessionUI();
+      byId('modalLogin').style.display='none';
+    }
+    byId('logoutBtn').onclick = ()=>{ sessionUser=null; localStorage.removeItem(SESSION_KEY); updateSessionUI(); }
+
+    function updateSessionUI(){ 
+      if(sessionUser){
+        byId('userName').textContent = sessionUser.name; 
+        byId('userSub').textContent = sessionUser.major || '';
+        byId('avatarLetter').textContent = sessionUser.name.slice(0,1).toUpperCase();
+        byId('loginBtn').style.display='none'; byId('logoutBtn').style.display='inline-block';
+      } else {
+        byId('userName').textContent='Invitado'; byId('userSub').textContent='Sin sesión'; byId('avatarLetter').textContent='G';
+        byId('loginBtn').style.display='inline-block'; byId('logoutBtn').style.display='none';
+      }
+    }
+
+    // categories filter
+    document.querySelectorAll('.cat').forEach(c=>c.onclick = e=>{
+      const cat = e.currentTarget.dataset.cat;
+      byId('currentFilter').textContent = cat==='all' ? 'Todos los temas' : cat;
+      currentFilter = cat==='all' ? 'all' : cat;
+      renderThreads(currentFilter, byId('searchBox').value);
+    });
+
+    byId('sortSelect').onchange = ()=>renderThreads(currentFilter, byId('searchBox').value);
+    byId('searchBox').oninput = ()=>renderThreads(currentFilter, byId('searchBox').value);
+
+    // profile btn
+    byId('myProfileBtn').onclick = ()=>{
+      if(!sessionUser){ alert('Inicia sesión para ver tu perfil'); return }
+      const modal = byId('modalView'); modal.style.display='flex'; const box = byId('viewModalContent');
+      const userThreads = db.threads.filter(t=>t.authorId===sessionUser.id);
+      box.innerHTML = `<h3>Perfil — ${escapeHtml(sessionUser.name)}</h3><div style="color:var(--muted)">${escapeHtml(sessionUser.major||'—')}</div><hr><div><strong>Reputación: </strong>${sessionUser.reputation} pts</div><div style="margin-top:8px"><strong>Tus temas publicados:</strong><ul>${userThreads.map(t=>'<li>'+escapeHtml(t.title)+'</li>').join('')}</ul></div><div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn" id="closeProf">Cerrar</button></div>`;
+      box.querySelector('#closeProf').onclick = ()=>{ modal.style.display='none'; }
+    }
+
+    // theme toggle
+    byId('themeToggle').onclick = ()=>{
+      if(document.documentElement.classList.contains('dark')){
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem(THEME_KEY,'light');
+        byId('themeToggle').textContent = '🌙';
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem(THEME_KEY,'dark');
+        byId('themeToggle').textContent = '☀️';
+      }
+    };
+
+    /* === [NUEVO] Lógica para el botón de filtro A11y === */
+    byId('a11yFilterBtn').onclick = ()=>{
+        const html = document.documentElement;
+        const current = html.dataset.cbf;
+        let nextState;
+        
+        if(current === 'protan') nextState = 'deutan';
+        else if(current === 'deutan') nextState = 'tritan';
+        else if(current === 'tritan') nextState = 'none';
+        else nextState = 'protan'; // Inicia el ciclo
+
+        const btn = byId('a11yFilterBtn');
+        if(nextState === 'none'){
+            delete html.dataset.cbf;
+            localStorage.removeItem(A11Y_KEY);
+            btn.textContent = '🎨';
+            btn.title = 'Cambiar filtro de color';
+        } else {
+            html.dataset.cbf = nextState;
+            localStorage.setItem(A11Y_KEY, nextState);
+            btn.textContent = nextState.charAt(0).toUpperCase(); // P, D, T
+            btn.title = `Filtro actual: ${nextState}`;
+        }
+        // Forzamos un re-renderizado de los hilos para que los estilos de botones se actualicen
+        // (ya que .btn.ghost hereda el color de --accent-brown)
+        renderThreads(currentFilter, byId('searchBox').value);
     };
 
-    // ===== load/save =====
-    function loadDB(){
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(raw) return JSON.parse(raw);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sample));
-      return JSON.parse(JSON.stringify(sample));
-    }
-    let db = loadDB();
+    // close modal by clicking backdrop
+    document.querySelectorAll('.modal-back').forEach(m=>m.onclick = e=>{ if(e.target===m) m.style.display='none'; });
 
-    // session (persistente)
-    function loadSession(){
-      const s = localStorage.getItem(SESSION_KEY);
-      return s ? JSON.parse(s) : null;
-    }
-    let sessionUser = loadSession();
+    // text-to-speech helper
+    function speak(text){
+      if(!('speechSynthesis' in window)){ alert('Tu navegador no soporta SpeechSynthesis'); return; }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'es-ES';
+      window.speechSynthesis.speak(u);
+    }
 
-    // theme
-    function initTheme(){
-      const saved = localStorage.getItem(THEME_KEY);
-      if(saved === 'dark'){ document.documentElement.classList.add('dark'); document.getElementById('themeToggle').textContent = '☀️'; }
-      else { document.documentElement.classList.remove('dark'); document.getElementById('themeToggle').textContent = '🌙'; }
-    }
+    // helpers
+    let currentFilter = 'all';
 
-    const byId = id => document.getElementById(id);
+    // initialize
+    initTheme();
+    initA11yFilter(); /* === [NUEVO] Cargar filtro A11y guardado === */
+    renderTop();
+    renderThreads('all','');
+    updateSessionUI();
 
-    // ===== render top collaborators =====
-    function renderTop(){
-      const ul = byId('topList'); ul.innerHTML = '';
-      const users = [...db.users].sort((a,b)=>b.reputation-a.reputation).slice(0,6);
-      users.forEach(u=>{
-        const li=document.createElement('li'); li.textContent = `${u.name} — ${u.reputation} pts`; ul.appendChild(li);
-      });
-    }
-
-    // ===== render threads list =====
-    function renderThreads(filter='all', q=''){
-      const container = byId('threadsList'); container.innerHTML = '';
-      let threads = db.threads.slice();
-      const sort = byId('sortSelect').value;
-      if(filter && filter!=='all') threads = threads.filter(t=>t.category===filter);
-      if(q) threads = threads.filter(t=> (t.title + ' ' + t.body).toLowerCase().includes(q.toLowerCase()));
-      if(sort==='new') threads.sort((a,b)=>b.created-a.created);
-      if(sort==='top') threads.sort((a,b)=> (b.votes - a.votes) || (b.created - a.created));
-      if(sort==='answered') threads.sort((a,b)=> (b.replies.length - a.replies.length) || (b.created - a.created));
-
-      threads.forEach(t=>{
-        const el = document.createElement('div'); el.className='thread';
-        const preview = escapeHtml(t.body.slice(0,240)) + (t.body.length>240 ? '...' : '');
-        el.innerHTML = `
-          <div class="votes">
-            <button class="up" data-id="${t.id}">▲</button>
-            <div style="font-size:14px;font-weight:700">${t.votes}</div>
-            <button class="down" data-id="${t.id}">▼</button>
-          </div>
-          <div class="thread-content">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start">
-              <div>
-                <div class="thread-title">${escapeHtml(t.title)}</div>
-                <div class="thread-meta">Publicado por ${getUserName(t.authorId)} · ${timeAgo(t.created)} · <span style="color:var(--muted)">${t.replies.length} respuestas</span></div>
-              </div>
-              <div class="tags"><div class="tag">${escapeHtml(t.category)}</div></div>
-            </div>
-            <div style="margin-top:8px;color:var(--muted);font-size:14px">${preview}</div>
-            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
-              <button class="btn ghost viewBtn" data-id="${t.id}">Ver tema</button>
-              <button class="read-btn" data-id="${t.id}" data-type="preview">🔊 Leer</button>
-            </div>
-          </div>
-        `;
-        container.appendChild(el);
-      });
-
-      // events
-      document.querySelectorAll('.up').forEach(b=>b.onclick = e=>voteThread(e.currentTarget.dataset.id,1));
-      document.querySelectorAll('.down').forEach(b=>b.onclick = e=>voteThread(e.currentTarget.dataset.id,-1));
-      document.querySelectorAll('.viewBtn').forEach(b=>b.onclick = e=>openThread(e.currentTarget.dataset.id));
-      document.querySelectorAll('.read-btn').forEach(b=>b.onclick = e=>{
-        const id = e.currentTarget.dataset.id;
-        const t = db.threads.find(x=>x.id===id);
-        if(!t) return;
-        speak(`${t.title}. ${t.body}`);
-      });
-    }
-
-    function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function getUserName(id){ const u = db.users.find(x=>x.id===id); return u?u.name:'Invitado'; }
-    function timeAgo(ts){ const s = Math.floor((Date.now()-ts)/1000); if(s<60) return s+'s'; if(s<3600) return Math.floor(s/60)+'m'; if(s<86400) return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
-
-    function voteThread(id,delta){
-      const t = db.threads.find(x=>x.id===id); if(!t) return;
-      t.votes = (t.votes||0) + delta;
-      saveDB(); renderThreads(currentFilter, byId('searchBox').value); renderTop();
-    }
-
-    function openThread(id){
-      const t = db.threads.find(x=>x.id===id); if(!t) return;
-      const modal = byId('modalView'); modal.style.display='flex';
-      const box = byId('viewModalContent'); box.innerHTML = '';
-      const author = getUserName(t.authorId);
-
-      const html = document.createElement('div');
-      html.innerHTML = `
-        <h3>${escapeHtml(t.title)}</h3>
-        <div style="color:var(--muted);font-size:13px">Por ${author} · ${timeAgo(t.created)} · ${t.votes} votos</div>
-        <div style="margin-top:8px"><button class="read-btn" id="readThreadFull">🔊 Leer tema completo</button></div>
-        <hr style="margin:12px 0">
-        <div style="white-space:pre-wrap">${escapeHtml(t.body)}</div>
-        <hr style="margin:12px 0">
-        <strong>Respuestas (${t.replies.length})</strong>
-        <div id="repliesBox" style="margin-top:8px"></div>
-        <div style="margin-top:12px">
-          <textarea id="replyText" placeholder="Escribe tu respuesta..."></textarea>
-          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-            <button class="btn ghost" id="closeView">Cerrar</button>
-            <button class="btn" id="publishReply">Responder</button>
-          </div>
-        </div>
-      `;
-      box.appendChild(html);
-
-      const repliesBox = box.querySelector('#repliesBox');
-      t.replies.forEach(r=>{
-        const u = getUserName(r.authorId);
-        const d = document.createElement('div');
-        d.style.padding='8px'; d.style.borderRadius='8px'; d.style.border='1px solid rgba(0,0,0,0.04)'; d.style.marginTop='8px';
-        d.innerHTML = `<div style="font-weight:700">${escapeHtml(u)} <small style="color:var(--muted);font-weight:400">· ${timeAgo(r.created)}</small></div><div style="margin-top:6px">${escapeHtml(r.body)}</div><div style="margin-top:6px"><button class="read-btn reply-read" data-id="${r.id}">🔊 Leer respuesta</button></div>`;
-        repliesBox.appendChild(d);
-      });
-
-      box.querySelector('#closeView').onclick = ()=>{ modal.style.display='none'; }
-      box.querySelector('#publishReply').onclick = ()=>{
-        const text = box.querySelector('#replyText').value.trim(); if(!text){ alert('Escribe algo para responder'); return }
-        const rid = 'r'+Math.random().toString(36).slice(2,9);
-        const authorId = sessionUser?sessionUser.id:'guest';
-        const reply = {id:rid,authorId,body:text,created:Date.now()};
-        t.replies.push(reply);
-        const u = db.users.find(x=>x.id===authorId); if(u) u.reputation += 2;
-        saveDB(); renderTop(); openThread(id); // re-open refreshed
-      }
-
-      box.querySelector('#readThreadFull').onclick = ()=> speak(`${t.title}. ${t.body}. Respuestas: ${t.replies.length}`);
-      box.querySelectorAll('.reply-read').forEach(b=>{
-        b.onclick = e=>{
-          const rid = e.currentTarget.dataset.id;
-          const r = t.replies.find(x=>x.id===rid);
-          if(r) speak(`${getUserName(r.authorId)} dijo: ${r.body}`);
-        };
-      });
-    }
-
-    function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
-    function saveSession(){ localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser)); }
-
-    // ===== events UI =====
-    byId('newThreadBtn').onclick = ()=>{ if(!sessionUser){ alert('Necesitas iniciar sesión para crear temas.'); return } byId('modalNew').style.display='flex'; }
-    byId('closeNew').onclick = ()=> byId('modalNew').style.display='none';
-    byId('publishBtn').onclick = ()=>{
-      const title = byId('threadTitle').value.trim();
-      const body = byId('threadBody').value.trim();
-      const cat = byId('threadCategory').value;
-      if(!title || !body){ alert('Completa título y contenido'); return }
-      const id = 't'+Math.random().toString(36).slice(2,9);
-      db.threads.push({id,title,category:cat,authorId:sessionUser.id,body,votes:0,created:Date.now(),replies:[]});
-      const me = db.users.find(x=>x.id===sessionUser.id); if(me) me.reputation = (me.reputation||0)+3;
-      saveDB();
-      byId('modalNew').style.display='none';
-      byId('threadTitle').value=''; byId('threadBody').value='';
-      renderThreads(currentFilter, byId('searchBox').value); renderTop();
-    }
-
-    // login
-    byId('loginBtn').onclick = ()=> byId('modalLogin').style.display='flex';
-    byId('closeLogin').onclick = ()=> byId('modalLogin').style.display='none';
-    byId('doLogin').onclick = ()=>{
-      const name = byId('loginName').value.trim(); const major = byId('loginMajor').value.trim();
-      if(!name){ alert('Escribe tu nombre'); return }
-      let user = db.users.find(u=>u.name.toLowerCase()===name.toLowerCase());
-      if(!user){ user = {id:'u'+Math.random().toString(36).slice(2,6), name, major:major||'—', reputation:5}; db.users.push(user); }
-      sessionUser = user;
-      saveDB(); saveSession(); updateSessionUI();
-      byId('modalLogin').style.display='none';
-    }
-    byId('logoutBtn').onclick = ()=>{ sessionUser=null; localStorage.removeItem(SESSION_KEY); updateSessionUI(); }
-
-    function updateSessionUI(){ 
-      if(sessionUser){
-        byId('userName').textContent = sessionUser.name; 
-        byId('userSub').textContent = sessionUser.major || '';
-        byId('avatarLetter').textContent = sessionUser.name.slice(0,1).toUpperCase();
-        byId('loginBtn').style.display='none'; byId('logoutBtn').style.display='inline-block';
-      } else {
-        byId('userName').textContent='Invitado'; byId('userSub').textContent='Sin sesión'; byId('avatarLetter').textContent='G';
-        byId('loginBtn').style.display='inline-block'; byId('logoutBtn').style.display='none';
-      }
-    }
-
-    // categories filter
-    document.querySelectorAll('.cat').forEach(c=>c.onclick = e=>{
-      const cat = e.currentTarget.dataset.cat;
-      byId('currentFilter').textContent = cat==='all' ? 'Todos los temas' : cat;
-      currentFilter = cat==='all' ? 'all' : cat;
-      renderThreads(currentFilter, byId('searchBox').value);
-    });
-
-    byId('sortSelect').onchange = ()=>renderThreads(currentFilter, byId('searchBox').value);
-    byId('searchBox').oninput = ()=>renderThreads(currentFilter, byId('searchBox').value);
-
-    // profile btn
-    byId('myProfileBtn').onclick = ()=>{
-      if(!sessionUser){ alert('Inicia sesión para ver tu perfil'); return }
-      const modal = byId('modalView'); modal.style.display='flex'; const box = byId('viewModalContent');
-      const userThreads = db.threads.filter(t=>t.authorId===sessionUser.id);
-      box.innerHTML = `<h3>Perfil — ${escapeHtml(sessionUser.name)}</h3><div style="color:var(--muted)">${escapeHtml(sessionUser.major||'—')}</div><hr><div><strong>Reputación: </strong>${sessionUser.reputation} pts</div><div style="margin-top:8px"><strong>Tus temas publicados:</strong><ul>${userThreads.map(t=>'<li>'+escapeHtml(t.title)+'</li>').join('')}</ul></div><div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn" id="closeProf">Cerrar</button></div>`;
-      box.querySelector('#closeProf').onclick = ()=>{ modal.style.display='none'; }
-    }
-
-    // theme toggle
-    byId('themeToggle').onclick = ()=>{
-      if(document.documentElement.classList.contains('dark')){
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem(THEME_KEY,'light');
-        byId('themeToggle').textContent = '🌙';
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem(THEME_KEY,'dark');
-        byId('themeToggle').textContent = '☀️';
-      }
-    };
-
-    // close modal by clicking backdrop
-    document.querySelectorAll('.modal-back').forEach(m=>m.onclick = e=>{ if(e.target===m) m.style.display='none'; });
-
-    // text-to-speech helper
-    function speak(text){
-      if(!('speechSynthesis' in window)){ alert('Tu navegador no soporta SpeechSynthesis'); return; }
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'es-ES';
-      window.speechSynthesis.speak(u);
-    }
-
-    // helpers
-    let currentFilter = 'all';
-
-    // initialize
-    initTheme();
-    renderTop();
-    renderThreads('all','');
-    updateSessionUI();
-
-    // Optional: allow logo replacement at runtime if LOGO_BASE64 provided elsewhere
-    // Example to replace logo: document.getElementById('siteLogo').src = 'data:image/png;base64,' + LOGO_BASE64;
-  </script>
+    // Optional: allow logo replacement at runtime if LOGO_BASE64 provided elsewhere
+    // Example to replace logo: document.getElementById('siteLogo').src = 'data:image/png;base64,' + LOGO_BASE64;
+  </script>
 </body>
 </html>
